@@ -1,12 +1,12 @@
 import * as React from 'react'
-import GameMap from './GameMap'
+import UserCharacter from './UserCharacter'
 import { render } from '@testing-library/react'
 
-describe('GameMap', () => {
+describe('UserCharacter', () => {
   const props = {}
   describe('render', () => {
     it('renders', () => {
-        const { queryByText } = render(<GameMap {...props} />)
+        const { queryByText } = render(<UserCharacter {...props} />)
     })
   })
 })

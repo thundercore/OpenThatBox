@@ -3,8 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core'
 import Web3Provider from '../../contexts/Web3Context/Web3Context'
 import { config } from '../../../config'
 import Header from '../Header/Header'
-import MinerContractProvider from '../../contexts/MinerContractContext/MinerContractContext'
-import Game from '../Game/Game'
+import GameContainer from '../../containers/GameContainer/GameContainer'
 
 const useStyles = makeStyles<Theme, IAppProps>((theme: Theme) =>
   createStyles({})
@@ -17,7 +16,7 @@ export default React.memo(function App(props: IAppProps) {
   return (
     <Web3Provider rpcUrl={config.rpcUrl}>
       <Header />
-      <Game size={10} />
+      <GameContainer />
       {/*<MinerContractProvider>*/}
       {/*</MinerContractProvider>*/}
     </Web3Provider>
