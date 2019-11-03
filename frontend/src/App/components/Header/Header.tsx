@@ -33,7 +33,7 @@ export default React.memo(function Header(props: IHeaderProps) {
   }
 
   return (
-    <AppBar>
+    <AppBar position={'relative'}>
       <Toolbar className={classes.container}>
         <Typography variant="h6" className={classes.title}>
           TT Miner
