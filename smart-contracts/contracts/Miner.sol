@@ -5,7 +5,6 @@ contract Miner {
     event GameEnded();
     event PlayerMoved(address playerAddress, uint256 positionX, uint256 positionY, uint256 value);
 
-
     uint256[][] map;
     mapping (address => Position) playerPositions;
 
@@ -22,26 +21,37 @@ contract Miner {
         Up
     }
 
+    enum GameState {
+        Constructed,
+        Started,
+        Ended
+    }
+
     address owner;
     uint256 endBlock;
+    GameState state;
 
     constructor() public {
         owner = msg.sender;
+        state = GameState.Constructed;
     }
 
-    function startGame(uint256 blocksUntillEnd) external payable {
+    function startGame(uint256 blocksUntilEnd) external payable {
+        require(state == GameState.Constructed);
         require(msg.sender == owner);
-        endBlock = block.number + blocksUntillEnd;
+        endBlock = block.number + blocksUntilEnd;
         emit GameStarted(endBlock);
     }
 
     function checkGameEnd() internal {
         if(block.number > endBlock) {
-
+            state = GameState.Ended;
+            emit GameEnded();
         }
     }
 
     function move(Direction direction) external {
+        require(state == GameState.Started);
         Position storage playerPosition = playerPositions[msg.sender];
         if(direction == Direction.Left) {
             playerPosition.x--;
