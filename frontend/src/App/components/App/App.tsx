@@ -17,9 +17,9 @@ export default React.memo(function App(props: IAppProps) {
   return (
     <Web3Provider rpcUrl={config.rpcUrl}>
       <Header />
-      <MinerContractProvider>
-        <Game />
-      </MinerContractProvider>
+      <Game size={10} />
+      {/*<MinerContractProvider>*/}
+      {/*</MinerContractProvider>*/}
     </Web3Provider>
   )
 })
