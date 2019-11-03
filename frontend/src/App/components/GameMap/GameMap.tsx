@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core'
 import GameCell from '../GameCell/GameCell'
+import { Direction } from '../../contexts/GameContext/GameContext'
 
 const useStyles = makeStyles<Theme, IGameProps>((theme: Theme) =>
   createStyles({
@@ -26,20 +27,26 @@ const useStyles = makeStyles<Theme, IGameProps>((theme: Theme) =>
 )
 
 interface IGameProps {
+  moveCell(x: number, y: number): any
+  canMove(x: number, y: number): boolean
   size: number
 }
 
 export default React.memo(function Game(props: IGameProps) {
-  const [map, setMap] = useState<number[][]>(() =>
-    Array(props.size)
-      .fill(0)
-      .map((x) => Array(props.size).fill(0))
+  const { moveCell, size, canMove } = props
+  const [map, setMap] = useState<number[][]>([[]])
+  useEffect(
+    () => {
+      setMap(
+        Array(props.size)
+          .fill(0)
+          .map((x) => Array(props.size).fill(0))
+      )
+    },
+    [size]
   )
-  const classes = useStyles(props)
 
-  const onClick = (row: number, column: number) => {
-    alert(`${row} ${column}`)
-  }
+  const classes = useStyles(props)
 
   const renderRows = (row: number[], rowIdx: number) => {
     return row.map((cell: number, cellIdx: number) => (
@@ -48,7 +55,8 @@ export default React.memo(function Game(props: IGameProps) {
           value={cell}
           row={rowIdx}
           column={cellIdx}
-          onClick={onClick}
+          canMove={canMove(cellIdx, rowIdx)}
+          onClick={moveCell}
         />
       </div>
     ))

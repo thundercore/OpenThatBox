@@ -8,6 +8,9 @@ const useStyles = makeStyles<Theme, ICharactersMapProps>((theme: Theme) =>
       position: 'absolute',
       transition: theme.transitions.create('all', { duration: 1000 }),
     },
+    container: {
+      pointerEvents: 'none',
+    },
   })
 )
 
@@ -26,7 +29,13 @@ export default React.memo(function CharactersMap(props: ICharactersMapProps) {
   const classes = useStyles(props)
 
   return (
-    <Box top={0} position={'absolute'} width={'100%'} height={'100%'}>
+    <Box
+      top={0}
+      position={'absolute'}
+      width={'100%'}
+      height={'100%'}
+      className={classes.container}
+    >
       {props.characters.map((character) => {
         const left = (100 / props.size) * character.x
         const right = (100 / props.size) * character.y

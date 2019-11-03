@@ -15,6 +15,7 @@ interface IGameCellProps {
   value: number
   row: number
   column: number
+  canMove: boolean
   onClick(row: number, column: number): void
 }
 
@@ -24,7 +25,11 @@ export default React.memo(function GameCell(props: IGameCellProps) {
   return (
     <div
       className={classes.cell}
-      onClick={() => props.onClick(props.row, props.column)}
+      onClick={() => {
+        if (props.canMove) {
+          props.onClick(props.column, props.row)
+        }
+      }}
     />
   )
 })
