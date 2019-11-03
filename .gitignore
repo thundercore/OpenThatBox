@@ -1,0 +1,12 @@
+.idea
+node_modules
+build
+.cache-loader
+.DS_Store
+*.log
+.env
+dist
+
+*.pem
+
+*.production

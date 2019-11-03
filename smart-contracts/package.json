@@ -1,0 +1,20 @@
+{
+  "name": "slot-machine-contract",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "test": "truffle test --network ganache",
+    "ensure-contract": "node ./scripts/ensureContractDeployed"
+  },
+  "dependencies": {
+    "truffle": "^5.0.43",
+    "truffle-hdwallet-provider": "^1.0.17"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "truffle-test-helpers": "^0.0.5"
+  }
+}
