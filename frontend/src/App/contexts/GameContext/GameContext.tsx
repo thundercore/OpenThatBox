@@ -6,6 +6,7 @@ import {
 } from 'ethers/providers'
 import { fromSeed } from 'ethers/utils/hdnode'
 import { sha256, toUtf8Bytes } from 'ethers/utils'
+import { useMinerContractContext } from '../MinerContractContext/MinerContractContext'
 
 interface IGameContextProps {
   children: ReactNode
@@ -15,11 +16,13 @@ export interface ICharacter {
   x: number
   y: number
   address: string
+  initialized: boolean
 }
 
 export interface IGameContext {
   move(direction: Direction): any
   moveCell(x: number, y: number): any
+  setPosition(x: number, y: number): any
   canMove(x: number, y: number): boolean
   currentUser: ICharacter
   size: number
@@ -38,11 +41,13 @@ export enum Direction {
 const GameContext = React.createContext<IGameContext>({
   move: (direction) => {},
   moveCell: (x, y) => {},
+  setPosition: (x, y) => {},
   canMove: (x, y) => true,
   currentUser: {
     x: 0,
     y: 0,
     address: 'fake',
+    initialized: false,
   },
   size: 0,
   // setCode: (code: string) => {},
@@ -58,7 +63,28 @@ export default function GameProvider({ children }: IGameContextProps) {
     x: 0,
     y: 0,
     address: 'fake',
+    initialized: false,
   })
+  const contractContext = useMinerContractContext()
+  const contract = contractContext.contract!
+
+  const setPosition = (x: number, y: number) => {
+    if (!currentUser.initialized) {
+      setCurrentUser({
+        ...currentUser,
+        x,
+        y,
+        initialized: true,
+      })
+      contract.setPosition(x, y).catch((err: any) => {
+        console.log(err)
+        setCurrentUser({
+          ...currentUser,
+          initialized: false,
+        })
+      })
+    }
+  }
 
   const canMove = (x: number, y: number) => {
     return (
@@ -92,6 +118,7 @@ export default function GameProvider({ children }: IGameContextProps) {
       value={{
         canMove,
         moveCell,
+        setPosition,
         move: handleMove,
         currentUser,
         size,

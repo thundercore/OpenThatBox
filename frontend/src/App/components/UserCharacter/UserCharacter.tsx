@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Box, createStyles, makeStyles, Theme } from '@material-ui/core'
 import Blockie from '../Blockie/Blockie'
-import { Direction } from '../../contexts/GameContext/GameContext'
+import { Direction, ICharacter } from '../../contexts/GameContext/GameContext'
 
 const useStyles = makeStyles<Theme, IUserCharacterProps>((theme: Theme) =>
   createStyles({
@@ -16,11 +16,7 @@ const useStyles = makeStyles<Theme, IUserCharacterProps>((theme: Theme) =>
 )
 
 interface IUserCharacterProps {
-  character: {
-    x: number
-    y: number
-    address: string
-  }
+  character: ICharacter
   size: number
   move(direction: Direction): any
 }
@@ -37,13 +33,13 @@ export default React.memo(function UserCharacter(props: IUserCharacterProps) {
 
   const keyPressHandler = React.useCallback(
     (evt: KeyboardEvent) => {
-      if (evt.key === 'ArrowDown' || evt.key == 's') {
+      if (evt.key === 'ArrowDown' || evt.key === 's') {
         move(Direction.Down)
-      } else if (evt.key === 'ArrowUp' || evt.key == 'w') {
+      } else if (evt.key === 'ArrowUp' || evt.key === 'w') {
         move(Direction.Up)
-      } else if (evt.key === 'ArrowLeft' || evt.key == 'a') {
+      } else if (evt.key === 'ArrowLeft' || evt.key === 'a') {
         move(Direction.Left)
-      } else if (evt.key === 'ArrowRight' || evt.key == 'd') {
+      } else if (evt.key === 'ArrowRight' || evt.key === 'd') {
         move(Direction.Right)
       }
     },
@@ -69,12 +65,14 @@ export default React.memo(function UserCharacter(props: IUserCharacterProps) {
       height={'100%'}
       className={classes.container}
     >
-      <Blockie
-        key={character.address}
-        address={character.address}
-        className={classes.character}
-        style={style}
-      />
+      {character.initialized && (
+        <Blockie
+          key={character.address}
+          address={character.address}
+          className={classes.character}
+          style={style}
+        />
+      )}
     </Box>
   )
 })

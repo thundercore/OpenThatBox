@@ -27,13 +27,13 @@ const useStyles = makeStyles<Theme, IGameProps>((theme: Theme) =>
 )
 
 interface IGameProps {
-  moveCell(x: number, y: number): any
+  handleClick(x: number, y: number): any
   canMove(x: number, y: number): boolean
   size: number
 }
 
 export default React.memo(function Game(props: IGameProps) {
-  const { moveCell, size, canMove } = props
+  const { handleClick, size, canMove } = props
   const [map, setMap] = useState<number[][]>([[]])
   useEffect(
     () => {
@@ -56,7 +56,7 @@ export default React.memo(function Game(props: IGameProps) {
           row={rowIdx}
           column={cellIdx}
           canMove={canMove(cellIdx, rowIdx)}
-          onClick={moveCell}
+          onClick={handleClick}
         />
       </div>
     ))

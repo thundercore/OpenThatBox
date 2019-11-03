@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, createStyles, makeStyles, Theme } from '@material-ui/core'
 import Blockie from '../Blockie/Blockie'
+import { ICharacter } from '../../contexts/GameContext/GameContext'
 
 const useStyles = makeStyles<Theme, ICharactersMapProps>((theme: Theme) =>
   createStyles({
@@ -13,12 +14,6 @@ const useStyles = makeStyles<Theme, ICharactersMapProps>((theme: Theme) =>
     },
   })
 )
-
-interface ICharacter {
-  x: number
-  y: number
-  address: string
-}
 
 interface ICharactersMapProps {
   characters: ICharacter[]

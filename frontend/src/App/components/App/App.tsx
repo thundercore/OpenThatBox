@@ -5,6 +5,8 @@ import { config } from '../../../config'
 import Header from '../Header/Header'
 import GameContainer from '../../containers/GameContainer/GameContainer'
 import GameProvider from '../../contexts/GameContext/GameContext'
+import MinerContractProvider from '../../contexts/MinerContractContext/MinerContractContext'
+import LoginForm from '../LoginForm/LoginForm'
 
 const useStyles = makeStyles<Theme, IAppProps>((theme: Theme) =>
   createStyles({})
@@ -16,12 +18,14 @@ export default React.memo(function App(props: IAppProps) {
   const classes = useStyles(props)
   return (
     <Web3Provider rpcUrl={config.rpcUrl}>
-      <Header />
-      <GameProvider>
-        <GameContainer />
-      </GameProvider>
-      {/*<MinerContractProvider>*/}
-      {/*</MinerContractProvider>*/}
+      <MinerContractProvider>
+        <Header />
+        <LoginForm>
+          <GameProvider>
+            <GameContainer />
+          </GameProvider>
+        </LoginForm>
+      </MinerContractProvider>
     </Web3Provider>
   )
 })
