@@ -20,19 +20,9 @@ interface IGameCellProps {
   row: number
   column: number
   canMove: boolean
-  onClick(row: number, column: number): void
 }
 
 export default React.memo(function GameCell(props: IGameCellProps) {
   const classes = useStyles(props)
-  return (
-    <div
-      className={clsx(classes.cell, props.canMove && classes.valid)}
-      onClick={() => {
-        if (props.canMove) {
-          props.onClick(props.column, props.row)
-        }
-      }}
-    />
-  )
+  return <div className={clsx(classes.cell, props.canMove && classes.valid)} />
 })

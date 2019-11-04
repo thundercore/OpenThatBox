@@ -86,20 +86,20 @@ export default function GameProvider({ children }: IGameContextProps) {
   }
 
   const canMove = (x: number, y: number) => {
-    if (currentUser.initialized) {
-      return (
-        Math.abs(currentUser.x - x) + Math.abs(currentUser.y - y) === 1 &&
-        x >= 0 &&
-        y >= 0 &&
-        x < size &&
-        y < size
-      )
-    } else {
-      return x === 0 || y === 0 || (x === size - 1 || y === size - 1)
-    }
+    // if (currentUser.initialized) {
+    return (
+      Math.abs(currentUser.x - x) + Math.abs(currentUser.y - y) === 1 &&
+      x >= 0 &&
+      y >= 0 &&
+      x < size &&
+      y < size
+    )
+    // } else {
+    //   return x === 0 || y === 0 || (x === size - 1 || y === size - 1)
+    // }
   }
 
-  const moveCell = React.useCallback((newX: number, newY: number) => {
+  const moveCell = (newX: number, newY: number) => {
     const { x, y } = currentUser
     if (x === newX - 1) {
       handleMove(Direction.Right)
@@ -110,9 +110,9 @@ export default function GameProvider({ children }: IGameContextProps) {
     } else if (y == newY + 1) {
       handleMove(Direction.Up)
     }
-  }, [])
+  }
 
-  const handleMove = React.useCallback((direction: Direction) => {
+  const handleMove = (direction: Direction) => {
     const { x, y } = currentUser
     if (direction === Direction.Down && canMove(x, y + 1)) {
       setCurrentUser({ ...currentUser, y: y + 1 })
@@ -135,7 +135,7 @@ export default function GameProvider({ children }: IGameContextProps) {
         setCurrentUser({ ...currentUser })
       })
     }
-  }, [])
+  }
 
   return (
     <GameContext.Provider
