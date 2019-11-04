@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 //@ts-ignore
 import * as blockies from 'blockies'
 
@@ -12,13 +12,17 @@ interface IBlockieProps
 
 export default React.memo(function Blockie(props: IBlockieProps) {
   const { address, ...rest } = props
-  const canvas = blockies({
-    seed: address,
-    color: '#fff',
-    bgcolor: '#00000000',
-    size: 6,
-    scale: 4,
-    spotcolor: '#00000000',
-  })
-  return <img {...rest} src={canvas.toDataURL()} />
+  const data = useMemo(
+    () =>
+      blockies({
+        seed: address,
+        color: '#fff',
+        bgcolor: '#00000000',
+        size: 6,
+        scale: 4,
+        spotcolor: '#00000000',
+      }).toDataURL(),
+    [address]
+  )
+  return <img {...rest} src={data} />
 })

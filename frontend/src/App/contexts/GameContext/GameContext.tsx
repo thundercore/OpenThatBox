@@ -86,16 +86,20 @@ export default function GameProvider({ children }: IGameContextProps) {
   }
 
   const canMove = (x: number, y: number) => {
-    return (
-      Math.abs(currentUser.x - x + currentUser.y - y) === 1 &&
-      x >= 0 &&
-      y >= 0 &&
-      x < size &&
-      y < size
-    )
+    if (currentUser.initialized) {
+      return (
+        Math.abs(currentUser.x - x) + Math.abs(currentUser.y - y) === 1 &&
+        x >= 0 &&
+        y >= 0 &&
+        x < size &&
+        y < size
+      )
+    } else {
+      return x === 0 || y === 0 || (x === size - 1 || y === size - 1)
+    }
   }
 
-  const moveCell = (newX: number, newY: number) => {
+  const moveCell = React.useCallback((newX: number, newY: number) => {
     const { x, y } = currentUser
     if (x === newX - 1) {
       handleMove(Direction.Right)
@@ -106,9 +110,9 @@ export default function GameProvider({ children }: IGameContextProps) {
     } else if (y == newY + 1) {
       handleMove(Direction.Up)
     }
-  }
+  }, [])
 
-  const handleMove = (direction: Direction) => {
+  const handleMove = React.useCallback((direction: Direction) => {
     const { x, y } = currentUser
     if (direction === Direction.Down && canMove(x, y + 1)) {
       setCurrentUser({ ...currentUser, y: y + 1 })
@@ -127,11 +131,11 @@ export default function GameProvider({ children }: IGameContextProps) {
       })
     } else if (direction === Direction.Right && canMove(x + 1, y)) {
       setCurrentUser({ ...currentUser, x: x + 1 })
-      contract.move(1).catch((d: any) => {
+      contract.move(Direction.Right).catch((d: any) => {
         setCurrentUser({ ...currentUser })
       })
     }
-  }
+  }, [])
 
   return (
     <GameContext.Provider

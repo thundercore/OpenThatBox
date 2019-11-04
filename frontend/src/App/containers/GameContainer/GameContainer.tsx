@@ -18,10 +18,10 @@ export default React.memo(function GameContainer(props: IGameContainerProps) {
     size,
   } = useGameContext()
   return (
-    <Box>
+    <Box mt={5}>
       <Box width={800} margin={'auto'} position={'relative'}>
         <Game
-          size={size}
+          size={20}
           canMove={canMove}
           handleClick={currentUser.initialized ? moveCell : setPosition}
         />

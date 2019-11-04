@@ -1,5 +1,6 @@
 import React from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core'
+import clsx from 'clsx'
 
 const useStyles = makeStyles<Theme, IGameCellProps>((theme: Theme) =>
   createStyles({
@@ -7,6 +8,9 @@ const useStyles = makeStyles<Theme, IGameCellProps>((theme: Theme) =>
       backgroundColor: 'grey',
       width: '100%',
       height: '100%',
+    },
+    valid: {
+      backgroundColor: 'red',
     },
   })
 )
@@ -21,10 +25,9 @@ interface IGameCellProps {
 
 export default React.memo(function GameCell(props: IGameCellProps) {
   const classes = useStyles(props)
-
   return (
     <div
-      className={classes.cell}
+      className={clsx(classes.cell, props.canMove && classes.valid)}
       onClick={() => {
         if (props.canMove) {
           props.onClick(props.column, props.row)

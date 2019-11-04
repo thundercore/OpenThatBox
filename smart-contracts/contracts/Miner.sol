@@ -74,7 +74,7 @@ contract Miner {
     function setPosition(uint _x, uint _y) external {
         Position storage playerPosition = playerPositions[msg.sender];
         require(!playerPosition.initialized);
-        require(_x == 0 || _y == 0);
+        require(_x == 0 || _y == 0 || _x==size-1 || _y==size-1);
         playerPosition.initialized = true;
         playerPosition.x = _x;
         playerPosition.y = _y;

@@ -21,7 +21,7 @@ const useStyles = makeStyles<Theme, IGameProps>((theme: Theme) =>
       },
     },
     cell: {
-      border: '1px solid green',
+      border: '1px solid #DEDEDE',
     },
   })
 )

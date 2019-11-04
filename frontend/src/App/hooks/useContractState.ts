@@ -79,6 +79,17 @@ export function useContractState() {
         })
       }
     })
+    contract.on('PlayerJoined', (userAddress, x, y) => {
+      userAddress = userAddress.toLowerCase()
+      if (userAddress !== address) {
+        const char = parseMinerLog(userAddress, x, y)
+        if (!characters[userAddress]) {
+          setCharacter({
+            [userAddress]: char,
+          })
+        }
+      }
+    })
   }, [])
 
   useEffect(() => {
