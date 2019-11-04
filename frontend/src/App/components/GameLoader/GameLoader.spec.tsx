@@ -1,12 +1,12 @@
 import * as React from 'react'
-import GameContainer from './GameContainer'
+import GameLoader from './GameLoader'
 import { render } from '@testing-library/react'
 
-describe('GameContainer', () => {
+describe('GameLoader', () => {
   const props = {}
   describe('render', () => {
     it('renders', () => {
-      const { queryByText } = render(<GameContainer {...props} />)
+        const { queryByText } = render(<GameLoader {...props} />)
     })
   })
 })
