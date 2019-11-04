@@ -1,12 +1,5 @@
-import React, { ReactNode, useContext, useState } from 'react'
-import { Signer, Wallet } from 'ethers'
-import {
-  JsonRpcProvider,
-  Web3Provider as EthersProvider,
-} from 'ethers/providers'
-import { fromSeed } from 'ethers/utils/hdnode'
-import { sha256, toUtf8Bytes } from 'ethers/utils'
-import { useMinerContractContext } from '../MinerContractContext/MinerContractContext'
+import React, { ReactNode, useContext } from 'react'
+import { useContractState } from '../../hooks/useContractState'
 
 interface IGameContextProps {
   children: ReactNode
@@ -17,6 +10,7 @@ export interface ICharacter {
   y: number
   address: string
   initialized: boolean
+  total: number
 }
 
 export interface IGameContext {
@@ -26,9 +20,9 @@ export interface IGameContext {
   canMove(x: number, y: number): boolean
   currentUser: ICharacter
   size: number
-  // signer?: Signer
-  // provider: JsonRpcProvider
-  // address: string
+  isLoading: boolean
+  error: boolean
+  characters: { [key: string]: ICharacter }
 }
 
 export enum Direction {
@@ -37,36 +31,42 @@ export enum Direction {
   Down,
   Up,
 }
+export enum GameState {
+  Constructed,
+  Started,
+  Ended,
+}
 
+const initialChar = {
+  total: 0,
+  x: 0,
+  y: 0,
+  address: 'fake',
+  initialized: false,
+}
 const GameContext = React.createContext<IGameContext>({
   move: (direction) => {},
   moveCell: (x, y) => {},
   setPosition: (x, y) => {},
   canMove: (x, y) => true,
-  currentUser: {
-    x: 0,
-    y: 0,
-    address: 'fake',
-    initialized: false,
-  },
+  characters: {},
+  currentUser: initialChar,
   size: 0,
-  // setCode: (code: string) => {},
-  // provider: new JsonRpcProvider(''),
-  // address: '',
-  // signer: undefined,
+  isLoading: true,
+  error: false,
 })
 
-const size = 10
-
 export default function GameProvider({ children }: IGameContextProps) {
-  const [currentUser, setCurrentUser] = useState({
-    x: 0,
-    y: 0,
-    address: 'fake',
-    initialized: false,
-  })
-  const contractContext = useMinerContractContext()
-  const contract = contractContext.contract!
+  const {
+    characters,
+    size,
+    currentUser,
+    error,
+    gameState,
+    setCurrentUser,
+    isLoading,
+    contract,
+  } = useContractState()
 
   const setPosition = (x: number, y: number) => {
     if (!currentUser.initialized) {
@@ -77,7 +77,6 @@ export default function GameProvider({ children }: IGameContextProps) {
         initialized: true,
       })
       contract.setPosition(x, y).catch((err: any) => {
-        console.log(err)
         setCurrentUser({
           ...currentUser,
           initialized: false,
@@ -96,20 +95,41 @@ export default function GameProvider({ children }: IGameContextProps) {
     )
   }
 
-  const moveCell = (x: number, y: number) => {
-    setCurrentUser({ ...currentUser, x, y })
+  const moveCell = (newX: number, newY: number) => {
+    const { x, y } = currentUser
+    if (x === newX - 1) {
+      handleMove(Direction.Right)
+    } else if (x == newX + 1) {
+      handleMove(Direction.Left)
+    } else if (y == newY - 1) {
+      handleMove(Direction.Down)
+    } else if (y == newY + 1) {
+      handleMove(Direction.Up)
+    }
   }
 
   const handleMove = (direction: Direction) => {
     const { x, y } = currentUser
     if (direction === Direction.Down && canMove(x, y + 1)) {
       setCurrentUser({ ...currentUser, y: y + 1 })
+      contract.move(Direction.Down).catch(() => {
+        setCurrentUser({ ...currentUser })
+      })
     } else if (direction === Direction.Up && canMove(x, y - 1)) {
       setCurrentUser({ ...currentUser, y: y - 1 })
+      contract.move(Direction.Up).catch(() => {
+        setCurrentUser({ ...currentUser })
+      })
     } else if (direction === Direction.Left && canMove(x - 1, y)) {
       setCurrentUser({ ...currentUser, x: x - 1 })
+      contract.move(Direction.Left).catch((e: any) => {
+        setCurrentUser({ ...currentUser })
+      })
     } else if (direction === Direction.Right && canMove(x + 1, y)) {
       setCurrentUser({ ...currentUser, x: x + 1 })
+      contract.move(1).catch((d: any) => {
+        setCurrentUser({ ...currentUser })
+      })
     }
   }
 
@@ -120,8 +140,11 @@ export default function GameProvider({ children }: IGameContextProps) {
         moveCell,
         setPosition,
         move: handleMove,
+        characters,
+        isLoading,
         currentUser,
         size,
+        error,
       }}
     >
       {children}

@@ -10,6 +10,7 @@ interface IGameContainerProps {}
 export default React.memo(function GameContainer(props: IGameContainerProps) {
   const {
     currentUser,
+    characters,
     canMove,
     setPosition,
     moveCell,
@@ -24,7 +25,7 @@ export default React.memo(function GameContainer(props: IGameContainerProps) {
           canMove={canMove}
           handleClick={currentUser.initialized ? moveCell : setPosition}
         />
-        <CharactersMap characters={[]} size={size} />
+        <CharactersMap characters={characters} size={size} />
         <UserCharacter character={currentUser} size={size} move={move} />
       </Box>
     </Box>

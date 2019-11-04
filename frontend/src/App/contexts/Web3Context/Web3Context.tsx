@@ -6,6 +6,7 @@ import {
 } from 'ethers/providers'
 import { fromSeed } from 'ethers/utils/hdnode'
 import { BigNumber, bigNumberify, sha256, toUtf8Bytes } from 'ethers/utils'
+import { sign } from 'crypto'
 
 interface IWeb3ContextProps {
   children: ReactNode
@@ -29,7 +30,11 @@ const Web3Context = React.createContext<IWeb3Context>({
 })
 
 export default function Web3Provider({ children, rpcUrl }: IWeb3ContextProps) {
-  const [provider] = useState(new JsonRpcProvider(rpcUrl))
+  const [provider] = useState(() => {
+    const myProvider = new JsonRpcProvider(rpcUrl)
+    myProvider.pollingInterval = 1000
+    return myProvider
+  })
   const [signer, setSigner] = useState<Wallet | undefined>()
   const [isValid, setValid] = useState(true)
 
@@ -49,14 +54,14 @@ export default function Web3Provider({ children, rpcUrl }: IWeb3ContextProps) {
     },
     [signer]
   )
-
+  console.log(signer && signer.address)
   return (
     <Web3Context.Provider
       value={{
         provider,
         signer,
         isValid,
-        address: signer ? signer.address : '',
+        address: signer ? signer.address.toLowerCase() : '',
         setCode,
       }}
     >

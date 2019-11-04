@@ -16,7 +16,7 @@ const useStyles = makeStyles<Theme, ICharactersMapProps>((theme: Theme) =>
 )
 
 interface ICharactersMapProps {
-  characters: ICharacter[]
+  characters: { [key: string]: ICharacter }
   size: number
 }
 
@@ -31,7 +31,7 @@ export default React.memo(function CharactersMap(props: ICharactersMapProps) {
       height={'100%'}
       className={classes.container}
     >
-      {props.characters.map((character) => {
+      {Object.values(props.characters).map((character) => {
         const left = (100 / props.size) * character.x
         const right = (100 / props.size) * character.y
         const style = {
