@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "frontend/build/static/js/main.d48d9a2c.chunk.js",
-    "main.js.map": "frontend/build/static/js/main.d48d9a2c.chunk.js.map",
+    "main.js": "frontend/build/static/js/main.dc45a086.chunk.js",
+    "main.js.map": "frontend/build/static/js/main.dc45a086.chunk.js.map",
     "runtime-main.js": "frontend/build/static/js/runtime-main.fd98316d.js",
     "runtime-main.js.map": "frontend/build/static/js/runtime-main.fd98316d.js.map",
-    "static/js/2.836f0493.chunk.js": "frontend/build/static/js/2.836f0493.chunk.js",
-    "static/js/2.836f0493.chunk.js.map": "frontend/build/static/js/2.836f0493.chunk.js.map",
+    "static/js/2.7a0e3877.chunk.js": "frontend/build/static/js/2.7a0e3877.chunk.js",
+    "static/js/2.7a0e3877.chunk.js.map": "frontend/build/static/js/2.7a0e3877.chunk.js.map",
     "index.html": "frontend/build/index.html",
-    "precache-manifest.e4cd4474da2544971ed804b8b031ec44.js": "frontend/build/precache-manifest.e4cd4474da2544971ed804b8b031ec44.js",
+    "precache-manifest.dc4c3703e7e92c03c9a773ecd94f948a.js": "frontend/build/precache-manifest.dc4c3703e7e92c03c9a773ecd94f948a.js",
     "service-worker.js": "frontend/build/service-worker.js",
     "static/media/box-closed.png": "frontend/build/static/media/box-closed.3f0598f3.png"
   },
   "entrypoints": [
     "static/js/runtime-main.fd98316d.js",
-    "static/js/2.836f0493.chunk.js",
-    "static/js/main.d48d9a2c.chunk.js"
+    "static/js/2.7a0e3877.chunk.js",
+    "static/js/main.dc45a086.chunk.js"
   ]
 }
