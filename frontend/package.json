@@ -9,7 +9,8 @@
     "ethers": "^4.0.39",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.5.3",
+    "react-animated-number": "^0.4.4"
   },
   "devDependencies": {
     "@types/jest": "24.0.21",
@@ -22,7 +23,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "PUBLIC_URL=OpenThatBox/frontend/build react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

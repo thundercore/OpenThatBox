@@ -1,6 +1,5 @@
 .idea
 node_modules
-build
 .cache-loader
 .DS_Store
 *.log
