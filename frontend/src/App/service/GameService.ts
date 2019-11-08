@@ -49,14 +49,14 @@ export class GameService {
     private readonly address: string
   ) {}
 
-  private createImage(address: string, color?: string) {
+  private createImage(address: string, spotColor?: boolean) {
     return blockies({
       seed: address,
-      color: color || 'red',
+      color: 'black',
       bgcolor: '#00000000',
       size: 6,
       scale: 4,
-      spotcolor: '#00000000',
+      spotcolor: spotColor ? undefined : '#00000000',
     }).toDataURL()
   }
 
@@ -81,7 +81,7 @@ export class GameService {
 
     this.currentUser = {
       address: this.address,
-      image: this.createImage(this.address),
+      image: this.createImage(this.address, true),
       ...user,
     }
 
@@ -124,6 +124,8 @@ export class GameService {
             : this.createImage(address),
         }
         this.map[character.x][character.y] = Tile.Mined
+      } else {
+        this.currentUser.total = character.total
       }
       this.stateUpdate.next()
     }
@@ -161,7 +163,7 @@ export class GameService {
       if (userAddress !== this.address) {
         this.characters[userAddress] = {
           ...character,
-          image: this.createImage(userAddress, 'blue'),
+          image: this.createImage(userAddress),
         }
       }
       this.map[character.x][character.y] = Tile.Mined
@@ -170,7 +172,6 @@ export class GameService {
 
   canMove(x: number, y: number) {
     return (
-      !this.isMoving &&
       x >= 0 &&
       y >= 0 &&
       x < this.size &&
@@ -180,15 +181,17 @@ export class GameService {
   }
 
   async callMove(direction: Direction) {
-    this.isMoving = true
     const trans = await this.contract.move(direction)
     await trans.wait()
-    this.isMoving = false
   }
 
   async move(direction: Direction) {
     console.log('move', direction)
     const { x, y } = this.currentUser
+    if (this.isMoving) {
+      return
+    }
+    this.isMoving = true
     try {
       if (direction === Direction.Down && this.canMove(x, y + 1)) {
         this.currentUser.y += 0.4
@@ -208,6 +211,7 @@ export class GameService {
         this.currentUser.x = x + 1
       }
       this.map[this.currentUser.x][this.currentUser.y] = Tile.Mined
+      this.isMoving = false
     } catch (e) {
       this.isMoving = false
       this.currentUser.y = y

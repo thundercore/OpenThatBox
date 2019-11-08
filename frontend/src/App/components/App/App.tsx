@@ -17,11 +17,12 @@ export default React.memo(function App(props: IAppProps) {
   const classes = useStyles(props)
   return (
     <Web3Provider
-      // rpcUrl={config.rpcUrl}>
-      rpcUrl={'https://mainnet-rpc.thundercore.com'}
+      rpcUrl={config.rpcUrl}
+      // rpcUrl={'https://mainnet-rpc.thundercore.com'}
     >
       <MinerContractProvider
-        contractAddress={'0x81397badca91F6822454fe72bb9c8444CBb15F7e'}
+        contractAddress={config.contractAddress}
+        // contractAddress={'0x81397badca91F6822454fe72bb9c8444CBb15F7e'}
       >
         <Header />
         <LoginForm>

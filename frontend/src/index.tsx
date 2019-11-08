@@ -6,7 +6,21 @@ import { unregister } from './serviceWorker'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core'
 
 ReactDOM.render(
-  <MuiThemeProvider theme={createMuiTheme()}>
+  <MuiThemeProvider
+    theme={createMuiTheme({
+      palette: {
+        background: {
+          default: '#edeceb',
+        },
+        secondary: {
+          main: '#ffe81c',
+        },
+        primary: {
+          main: 'rgba(123, 239, 178, 1)',
+        },
+      },
+    })}
+  >
     <CssBaseline>
       <App />
     </CssBaseline>

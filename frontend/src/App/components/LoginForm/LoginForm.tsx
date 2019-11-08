@@ -33,31 +33,27 @@ export default React.memo(function LoginForm(props: ILoginFormProps) {
   return !isLoggedIn ? (
     <Box
       display={'flex'}
-      flexDirection={'column'}
       pt={8}
       alignItems={'center'}
       justifyContent={'center'}
     >
-      <Box mb={2} width={400}>
+      <Box mr={2} width={400}>
         <TextField
           fullWidth
+          color={'inherit'}
+          variant={'filled'}
           error={!!address && !isValid}
           onChange={(evt) => setCodeVal(evt.target.value)}
           label={!!address && !isValid ? 'Invalid Code' : 'Code'}
         />
       </Box>
       <Button
-        color="secondary"
+        color="primary"
         variant={'contained'}
         disabled={isLoading}
         onClick={handleClick}
       >
         Login
-        {isLoading && (
-          <Box ml={1} display={'inherit'}>
-            <CircularProgress size={24} />
-          </Box>
-        )}
       </Button>
     </Box>
   ) : (

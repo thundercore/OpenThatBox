@@ -9,10 +9,11 @@ interface IBlockieProps
     > {
   address: string
   color: string
+  spot?: boolean
 }
 
 export default React.memo(function Blockie(props: IBlockieProps) {
-  const { address, color, ...rest } = props
+  const { address, color, spot, ...rest } = props
   const data = useMemo(
     () =>
       blockies({
@@ -21,7 +22,7 @@ export default React.memo(function Blockie(props: IBlockieProps) {
         bgcolor: '#00000000',
         size: 6,
         scale: 4,
-        spotcolor: '#00000000',
+        spotcolor: spot ? undefined : '#00000000',
       }).toDataURL(),
     [address]
   )

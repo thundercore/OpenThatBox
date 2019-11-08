@@ -29,7 +29,7 @@ export default React.memo(function Header(props: IHeaderProps) {
     <AppBar position={'relative'}>
       <Toolbar className={classes.container}>
         <Typography variant="h6" className={classes.title}>
-          TT Miner
+          Open That Box
         </Typography>
         {address &&
           isValid && (
@@ -41,10 +41,11 @@ export default React.memo(function Header(props: IHeaderProps) {
                 </Typography>
               </Box>
               <Blockie
+                spot
                 address={address}
                 height={24}
                 width={24}
-                color={'white'}
+                color={'black'}
               />
             </Box>
           )}
