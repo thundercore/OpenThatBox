@@ -6,7 +6,7 @@ import {
   ICharacter,
   Tile,
 } from '../../service/GameService'
-import RockTiles from '../../assets/RockTile.png'
+import BoxClosed from '../../assets/box-closed.png'
 
 const useStyles = makeStyles<Theme, ICanvasGameProps>((theme: Theme) =>
   createStyles({})
@@ -23,8 +23,8 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
   const classes = useStyles(props)
   const { service } = props
   const ref = useRef<any>()
-  const image = new Image()
-  image.src = RockTiles
+  const BoxImage = new Image()
+  BoxImage.src = BoxClosed
 
   const viewPortX = 29
   const viewPortY = 19
@@ -41,9 +41,8 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
         ctx.lineWidth = 2
         ctx.strokeStyle = 'black'
         ctx.strokeRect(dx, dy, TileSize, TileSize)
-        if (service.map[x][y] === Tile.Mined) {
-          ctx.fillStyle = 'green'
-          ctx.fillRect(dx, dy, TileSize, TileSize)
+        if (service.map[x][y] === Tile.Unmined) {
+          ctx.drawImage(BoxImage, dx + 5, dy + 5, 20, 20)
         }
       }
     }
@@ -76,8 +75,8 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     image.src = user.image
     ctx.drawImage(
       image,
-      (user.x - currentUser.x + viewPortX / 2) * TileSize + 5,
-      (user.y - currentUser.y + viewPortY / 2) * TileSize + 5,
+      (user.x - currentUser.x + viewPortX / 2) * TileSize + 6,
+      (user.y - currentUser.y + viewPortY / 2) * TileSize + 6,
       20,
       20
     )
@@ -89,8 +88,8 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     // always in the center
     ctx.drawImage(
       image,
-      (viewPortX * TileSize) / 2 + 5,
-      (viewPortY * TileSize) / 2 + 5,
+      (viewPortX * TileSize) / 2 + 6,
+      (viewPortY * TileSize) / 2 + 6,
       20,
       20
     )
@@ -104,16 +103,18 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     ctx.clearRect(0, 0, viewPortX * TileSize, viewPortY * TileSize)
     const { currentUser } = service
     // always in the middle
-    let boundsXLow = currentUser.x - 15 < 0 ? 0 : currentUser.x - 15
+    let boundsXLow =
+      Math.round(currentUser.x) - 15 < 0 ? 0 : Math.round(currentUser.x) - 15
     let boundsXHigh =
-      currentUser.x + 14 > service.size - 1
+      Math.round(currentUser.x) + 14 > service.size - 1
         ? service.size - 1
-        : currentUser.x + 14
-    let boundsYLow = currentUser.y - 10 < 0 ? 0 : currentUser.y - 10
+        : Math.round(currentUser.x) + 14
+    let boundsYLow =
+      Math.round(currentUser.y) - 10 < 0 ? 0 : Math.round(currentUser.y) - 10
     let boundsYHigh =
-      currentUser.y + 10 > service.size - 1
+      Math.round(currentUser.y) + 10 > service.size - 1
         ? service.size - 1
-        : currentUser.y + 10
+        : Math.round(currentUser.y) + 10
 
     boundsXHigh =
       boundsXHigh > service.size - 1 ? service.size - 1 : boundsXHigh

@@ -191,17 +191,21 @@ export class GameService {
     const { x, y } = this.currentUser
     try {
       if (direction === Direction.Down && this.canMove(x, y + 1)) {
-        this.currentUser.y = y + 1
+        this.currentUser.y += 0.4
         await this.callMove(Direction.Down)
+        this.currentUser.y = y + 1
       } else if (direction === Direction.Up && this.canMove(x, y - 1)) {
-        this.currentUser.y = y - 1
+        this.currentUser.y -= 0.4
         await this.callMove(Direction.Up)
+        this.currentUser.y = y - 1
       } else if (direction === Direction.Left && this.canMove(x - 1, y)) {
-        this.currentUser.x = x - 1
+        this.currentUser.x -= 0.4
         await this.callMove(Direction.Left)
+        this.currentUser.x = x - 1
       } else if (direction === Direction.Right && this.canMove(x + 1, y)) {
-        this.currentUser.x = x + 1
+        this.currentUser.x += 0.4
         await this.callMove(Direction.Right)
+        this.currentUser.x = x + 1
       }
       this.map[this.currentUser.x][this.currentUser.y] = Tile.Mined
     } catch (e) {
