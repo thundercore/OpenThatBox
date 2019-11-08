@@ -50,14 +50,41 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     }
   }
 
-  function drawCharacter(ctx: CanvasRenderingContext2D, bounds: any) {
+  function drawCharacters(
+    ctx: CanvasRenderingContext2D,
+    bounds: any,
+    currentUser: ICharacter
+  ) {
     const { characters } = service
     Object.values(characters).forEach((user) => {
-      drawUser(ctx, user)
+      if (
+        user.x >= bounds.boundsXLow &&
+        user.x <= bounds.boundsXHigh &&
+        user.y >= bounds.boundsYLow &&
+        user.y <= bounds.boundsYHigh
+      ) {
+        drawUser(ctx, user, currentUser)
+      }
     })
   }
 
-  function drawUser(ctx: CanvasRenderingContext2D, user: ICharacter) {
+  function drawUser(
+    ctx: CanvasRenderingContext2D,
+    user: ICharacter,
+    currentUser: ICharacter
+  ) {
+    const image = new Image()
+    image.src = user.image
+    ctx.drawImage(
+      image,
+      (user.x - currentUser.x + viewPortX / 2) * TileSize + 5,
+      (user.y - currentUser.y + viewPortY / 2) * TileSize + 5,
+      20,
+      20
+    )
+  }
+
+  function drawCurrentUser(ctx: CanvasRenderingContext2D, user: ICharacter) {
     const image = new Image()
     image.src = user.image
     // always in the center
@@ -78,8 +105,6 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     ctx.clearRect(0, 0, viewPortX * TileSize, viewPortY * TileSize)
     const { currentUser } = service
     // always in the middle
-    drawUser(ctx, service.currentUser)
-    debugger
     let boundsXLow = currentUser.x - 14 < 0 ? 0 : currentUser.x - 14
     let boundsXHigh =
       currentUser.x + 14 > service.size - 1
@@ -101,8 +126,9 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
 
     drawMap(ctx, bounds, service.currentUser)
 
-    drawCharacter(ctx, bounds)
-    drawUser(ctx, service.currentUser)
+    drawCharacters(ctx, bounds, service.currentUser)
+    drawCurrentUser(ctx, service.currentUser)
+
     requestAnimationFrame(drawGame)
   }
   requestAnimationFrame(drawGame)

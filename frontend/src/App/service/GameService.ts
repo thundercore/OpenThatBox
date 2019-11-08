@@ -46,10 +46,10 @@ export class GameService {
     private readonly address: string
   ) {}
 
-  private createImage(address: string) {
+  private createImage(address: string, color?: string) {
     return blockies({
       seed: address,
-      color: 'red',
+      color: color || 'red',
       bgcolor: '#00000000',
       size: 6,
       scale: 4,
@@ -157,7 +157,7 @@ export class GameService {
       if (userAddress !== this.address) {
         this.characters[userAddress] = {
           ...character,
-          image: this.createImage(userAddress),
+          image: this.createImage(userAddress, 'blue'),
         }
       }
       this.map[character.x][character.y] = Tile.Mined
