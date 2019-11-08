@@ -17,7 +17,7 @@ export default React.memo(function App(props: IAppProps) {
   const classes = useStyles(props)
   return (
     <Web3Provider rpcUrl={config.rpcUrl}>
-      <MinerContractProvider>
+      <MinerContractProvider contractAddress={config.contractAddress}>
         <Header />
         <LoginForm>
           <GameLoader />

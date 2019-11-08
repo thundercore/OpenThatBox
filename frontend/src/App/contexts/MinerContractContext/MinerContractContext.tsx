@@ -5,17 +5,16 @@ import { useWeb3Context } from '../Web3Context/Web3Context'
 
 interface IContractContextProps {
   children?: ReactNode
+  contractAddress: string
 }
 
 interface IContractContext {
-  setContractAddress(address: string): any
   contract?: Contract
   isLoading: boolean
   error: boolean
 }
 
 const Context = React.createContext<IContractContext>({
-  setContractAddress: (address) => {},
   isLoading: false,
   error: false,
 })
@@ -24,7 +23,7 @@ export default function MinerContractProvider(props: IContractContextProps) {
   const [contract, setContract] = useState<Contract | undefined>()
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [contractAddress, setContractAddress] = useState()
+  const { contractAddress } = props
 
   const { signer, provider } = useWeb3Context()
 
@@ -52,7 +51,6 @@ export default function MinerContractProvider(props: IContractContextProps) {
               setContract(undefined)
             })
         } catch (e) {
-          debugger
           setLoading(false)
           setError(true)
           setContract(undefined)
@@ -63,9 +61,7 @@ export default function MinerContractProvider(props: IContractContextProps) {
   )
 
   return (
-    <Context.Provider
-      value={{ setContractAddress, contract, isLoading, error }}
-    >
+    <Context.Provider value={{ contract, isLoading, error }}>
       {props.children}
     </Context.Provider>
   )

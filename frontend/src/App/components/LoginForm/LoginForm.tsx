@@ -9,7 +9,6 @@ import {
   Theme,
 } from '@material-ui/core'
 import { useWeb3Context } from '../../contexts/Web3Context/Web3Context'
-import { bigNumberify } from 'ethers/utils'
 import { useMinerContractContext } from '../../contexts/MinerContractContext/MinerContractContext'
 
 const useStyles = makeStyles<Theme, ILoginFormProps>((theme: Theme) =>
@@ -23,20 +22,12 @@ interface ILoginFormProps {
 export default React.memo(function LoginForm(props: ILoginFormProps) {
   const classes = useStyles(props)
   const { setCode, isValid, address } = useWeb3Context()
-  const {
-    contract,
-    error,
-    isLoading,
-    setContractAddress,
-  } = useMinerContractContext()
+  const { contract, isLoading } = useMinerContractContext()
   const [code, setCodeVal] = useState('')
-  const [contractAddress, updateContractAddress] = useState('')
 
   const handleClick = () => {
     setCode(code)
-    setContractAddress(contractAddress)
   }
-
   const isLoggedIn = isValid && address && !!contract
 
   return !isLoggedIn ? (
@@ -53,14 +44,6 @@ export default React.memo(function LoginForm(props: ILoginFormProps) {
           error={!!address && !isValid}
           onChange={(evt) => setCodeVal(evt.target.value)}
           label={!!address && !isValid ? 'Invalid Code' : 'Code'}
-        />
-      </Box>
-      <Box mb={4} width={400}>
-        <TextField
-          fullWidth
-          error={error}
-          onChange={(evt) => updateContractAddress(evt.target.value)}
-          label={error ? 'Invalid Contract Address' : 'Contract Address'}
         />
       </Box>
       <Button
