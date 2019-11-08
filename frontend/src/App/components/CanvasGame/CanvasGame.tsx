@@ -1,6 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core'
-import { Direction, GameService, ICharacter } from '../../service/GameService'
+import {
+  Direction,
+  GameService,
+  ICharacter,
+  Tile,
+} from '../../service/GameService'
 import RockTiles from '../../assets/RockTile.png'
 
 const useStyles = makeStyles<Theme, ICanvasGameProps>((theme: Theme) =>
@@ -12,7 +17,7 @@ interface ICanvasGameProps {
   stop: boolean
 }
 
-const TileSize = 24
+const TileSize = 32
 
 export default React.memo(function CanvasGame(props: ICanvasGameProps) {
   const classes = useStyles(props)
@@ -21,17 +26,28 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
   const image = new Image()
   image.src = RockTiles
 
-  const viewPortX = 30
-  const viewPortY = 20
+  const viewPortX = 29
+  const viewPortY = 19
 
-  function drawMap(ctx: CanvasRenderingContext2D, bounds: any) {
-    for (let x = bounds.boundsXLow; x < bounds.boundsXHigh; x++) {}
-    service.map.forEach((row, rowIdx) => {
-      row.forEach((tile, colIdx) => {
-        ctx.fillStyle = 'red'
-        ctx.fillRect(colIdx * TileSize, rowIdx * TileSize, TileSize, TileSize)
-      })
-    })
+  function drawMap(
+    ctx: CanvasRenderingContext2D,
+    bounds: any,
+    currentUser: ICharacter
+  ) {
+    for (let x = bounds.boundsXLow; x <= bounds.boundsXHigh; x++) {
+      for (let y = bounds.boundsYLow; y <= bounds.boundsYHigh; y++) {
+        const dx = (x - currentUser.x + viewPortX / 2) * TileSize
+        const dy = (y - currentUser.y + viewPortY / 2) * TileSize
+        if (service.map[x][y] === Tile.Mined) {
+          ctx.fillStyle = 'green'
+          ctx.fillRect(dx, dy, TileSize, TileSize)
+        } else {
+          ctx.lineWidth = 2
+          ctx.strokeStyle = 'black'
+          ctx.strokeRect(dx, dy, TileSize, TileSize)
+        }
+      }
+    }
   }
 
   function drawCharacter(ctx: CanvasRenderingContext2D, bounds: any) {
@@ -44,12 +60,13 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
   function drawUser(ctx: CanvasRenderingContext2D, user: ICharacter) {
     const image = new Image()
     image.src = user.image
+    // always in the center
     ctx.drawImage(
       image,
-      user.x * TileSize,
-      user.y * TileSize,
-      TileSize,
-      TileSize
+      (viewPortX * TileSize) / 2 + 5,
+      (viewPortY * TileSize) / 2 + 5,
+      20,
+      20
     )
   }
 
@@ -60,16 +77,30 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     const ctx: CanvasRenderingContext2D = ref.current.getContext('2d')
     ctx.clearRect(0, 0, viewPortX * TileSize, viewPortY * TileSize)
     const { currentUser } = service
-    let boundsXLow = currentUser.x - 15
-    let boundsXHigh = currentUser.x + 15
-    let boundsYLow = currentUser.y - 15
-    let boundsYHigh = currentUser.y + 15
-    boundsXHigh = boundsXHigh > service.size ? service.size : boundsXHigh
+    // always in the middle
+    drawUser(ctx, service.currentUser)
+    debugger
+    let boundsXLow = currentUser.x - 14 < 0 ? 0 : currentUser.x - 14
+    let boundsXHigh =
+      currentUser.x + 14 > service.size - 1
+        ? service.size - 1
+        : currentUser.x + 14
+    let boundsYLow = currentUser.y - 10 < 0 ? 0 : currentUser.y - 10
+    let boundsYHigh =
+      currentUser.y + 10 > service.size - 1
+        ? service.size - 1
+        : currentUser.y + 10
+
+    boundsXHigh =
+      boundsXHigh > service.size - 1 ? service.size - 1 : boundsXHigh
     boundsXLow = boundsXLow < 0 ? 0 : boundsXLow
-    boundsYHigh = boundsYHigh > service.size ? service.size : boundsYHigh
+    boundsYHigh =
+      boundsYHigh > service.size - 1 ? service.size - 1 : boundsYHigh
     boundsYLow = boundsYLow < 0 ? 0 : boundsYLow
     const bounds = { boundsXHigh, boundsXLow, boundsYHigh, boundsYLow }
-    drawMap(ctx, bounds)
+
+    drawMap(ctx, bounds, service.currentUser)
+
     drawCharacter(ctx, bounds)
     drawUser(ctx, service.currentUser)
     requestAnimationFrame(drawGame)

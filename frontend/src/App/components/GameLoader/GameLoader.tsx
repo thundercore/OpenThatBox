@@ -29,7 +29,10 @@ export default React.memo(function GameLoader(props: IGameLoaderProps) {
       service
         .initialize()
         .then(() => setLoading(false))
-        .catch(() => setError(true))
+        .catch((a) => {
+          console.log(a)
+          setError(true)
+        })
     },
     [service]
   )

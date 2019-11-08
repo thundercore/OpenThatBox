@@ -6,8 +6,8 @@ contract Miner {
     event PlayerMoved(address playerAddress, uint256 positionX, uint256 positionY, uint256 value, uint256 total);
     event PlayerJoined(address playerAddress, uint256 positionX, uint256 positionY);
 
-    uint256[][] map;
     mapping (address => Position) public playerPositions;
+    mapping (uint => bool) tileRevealed;
 
     struct Position {
         uint256 total;
@@ -39,22 +39,6 @@ contract Miner {
         owner = msg.sender;
         state = GameState.Constructed;
         size = _size;
-        initMap();
-    }
-
-    function initMap() internal {
-        map = new uint[][](size);
-        for (uint y=0 ; y < size; y++) {
-            uint[] memory temp = new uint[](size);
-            for(uint x = 0; x < size; x++){
-                if(x==0 || x == size-1 || y ==0 || y ==size-1){
-                    temp[x]= 0;
-                }else {
-                    temp[x] = 1;
-                }
-            }
-            map[y] = temp;
-        }
     }
 
     function startGame(uint256 _blocksUntilEnd) external payable {
@@ -71,18 +55,20 @@ contract Miner {
         }
     }
 
-    function setPosition(uint _x, uint _y) external {
+    function joinGame() external {
         Position storage playerPosition = playerPositions[msg.sender];
         require(!playerPosition.initialized);
-        require(_x == 0 || _y == 0 || _x==size-1 || _y==size-1);
+
         playerPosition.initialized = true;
-        playerPosition.x = _x;
-        playerPosition.y = _y;
-        emit PlayerJoined(msg.sender, _x,_y);
+        playerPosition.x = uint256(keccak256(abi.encodePacked(blockhash(block.number -1), msg.sender))) % size;
+        playerPosition.y = uint256(keccak256(abi.encodePacked(blockhash(block.number -2), msg.sender))) % size;
+        tileRevealed[playerPosition.x + (playerPosition.y * size)] = true;
+
+        emit PlayerJoined(msg.sender, playerPosition.x,playerPosition.y);
     }
 
     function move(Direction _direction) external {
-//        require(state == GameState.Started);
+        //        require(state == GameState.Started);
         Position storage playerPosition = playerPositions[msg.sender];
         if(_direction == Direction.Left) {
             playerPosition.x--;
@@ -97,9 +83,9 @@ contract Miner {
     }
 
     function getRewards(Position storage playerPosition) internal {
-        uint256 value = map[playerPosition.x][playerPosition.y];
-        playerPosition.total += value;
-        map[playerPosition.x][playerPosition.y] = 0;
-        emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,value,playerPosition.total);
+        //        uint256 value = map[playerPosition.x][playerPosition.y];
+        //        playerPosition.total += value;
+        //        map[playerPosition.x][playerPosition.y] = 0;
+        emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,2,playerPosition.total);
     }
 }

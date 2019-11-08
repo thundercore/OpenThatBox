@@ -4,10 +4,12 @@ import { parseMinerLog } from '../utils/parseMinerLog'
 import * as blockies from 'blockies'
 import { BigNumber } from 'ethers/utils'
 
-enum Tile {
+export enum Tile {
   Unmined,
-  Empty,
+  Mined,
+  Treasure,
 }
+
 export interface ICharacter {
   image: string
   x: number
@@ -47,7 +49,7 @@ export class GameService {
   private createImage(address: string) {
     return blockies({
       seed: address,
-      color: '#fff',
+      color: 'red',
       bgcolor: '#00000000',
       size: 6,
       scale: 4,
@@ -55,25 +57,40 @@ export class GameService {
     }).toDataURL()
   }
 
-  async initialize() {
-    const [position, size, state] = await Promise.all([
-      this.contract.playerPositions(this.address),
-      this.contract.size(),
-      this.contract.state(),
-    ])
-    this.size = size.toNumber()
-    this.makeMap(this.size)
-
-    this.currentUser = {
-      image: this.createImage(this.address),
-      address: position.address,
+  getCurrentUser = async () => {
+    const position = await this.contract.playerPositions(this.address)
+    return {
       x: position.x.toNumber(),
       y: position.y.toNumber(),
       total: position.total.toNumber(),
       initialized: position.initialized,
     }
+  }
 
-    this.map[this.currentUser.x][this.currentUser.y] = position.address
+  async initialize() {
+    const [user, size, state] = await Promise.all([
+      this.getCurrentUser(),
+      this.contract.size(),
+      this.contract.state(),
+    ])
+    this.size = size.toNumber()
+    this.map = this.makeMap(this.size)
+
+    this.currentUser = {
+      address: this.address,
+      image: this.createImage(this.address),
+      ...user,
+    }
+
+    if (!this.currentUser.initialized) {
+      const trans = await this.contract.joinGame()
+      await trans.wait()
+      this.currentUser = {
+        ...this.currentUser,
+        ...(await this.getCurrentUser()),
+      }
+    }
+    this.map[this.currentUser.x][this.currentUser.y] = Tile.Mined
 
     this.gameState = state
     await this.loadHistoricalData()
@@ -81,7 +98,7 @@ export class GameService {
   }
 
   private makeMap(size: number) {
-    this.map = Array(size)
+    return Array(size)
       .fill(Tile.Unmined)
       .map((x) => Array(size).fill(Tile.Unmined))
   }
@@ -96,12 +113,14 @@ export class GameService {
     ) => {
       address = address.toLowerCase()
       if (address !== this.address) {
-        this.characters[address] = {
+        const character = {
           ...parseMinerLog(address, x, y, val, total),
           image: this.characters[address]
             ? this.characters[address].image
             : this.createImage(address),
         }
+        this.characters[address] = character
+        this.map[character.x][character.y] = Tile.Mined
       }
     }
     this.contract.on('PlayerJoined', handleEvent)
@@ -126,18 +145,22 @@ export class GameService {
     logs.forEach((log) => {
       const { values } = this.contract.interface.parseLog(log)
       const userAddress = values[0].toLowerCase()
+      const character = {
+        ...parseMinerLog(
+          userAddress,
+          values[1],
+          values[2],
+          values[3],
+          values[4]
+        ),
+      }
       if (userAddress !== this.address) {
         this.characters[userAddress] = {
-          ...parseMinerLog(
-            userAddress,
-            values[1],
-            values[2],
-            values[3],
-            values[4]
-          ),
+          ...character,
           image: this.createImage(userAddress),
         }
       }
+      this.map[character.x][character.y] = Tile.Mined
     })
   }
 
@@ -157,7 +180,9 @@ export class GameService {
     await this.contract.move(direction)
     this.isMoving = false
   }
+
   async move(direction: Direction) {
+    console.log('move', direction)
     const { x, y } = this.currentUser
     try {
       if (direction === Direction.Down && this.canMove(x, y + 1)) {
@@ -173,6 +198,7 @@ export class GameService {
         this.currentUser.x = x + 1
         await this.callMove(Direction.Right)
       }
+      this.map[this.currentUser.x][this.currentUser.y] = Tile.Mined
     } catch (e) {
       this.isMoving = false
       this.currentUser.y = y

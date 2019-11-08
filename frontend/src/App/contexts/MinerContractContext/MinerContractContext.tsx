@@ -29,15 +29,11 @@ export default function MinerContractProvider(props: IContractContextProps) {
 
   useEffect(
     () => {
-      if (contractAddress) {
+      if (contractAddress && signer) {
         setLoading(true)
         setError(false)
         try {
-          const contract = new Contract(
-            contractAddress,
-            abi as any,
-            signer || provider
-          )
+          const contract = new Contract(contractAddress, abi as any, signer)
           contract
             .deployed()
             .then((contract) => {
@@ -57,7 +53,7 @@ export default function MinerContractProvider(props: IContractContextProps) {
         }
       }
     },
-    [provider, signer, contractAddress]
+    [signer, contractAddress]
   )
 
   return (
