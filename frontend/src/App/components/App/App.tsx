@@ -19,10 +19,11 @@ export default React.memo(function App(props: IAppProps) {
     <Web3Provider
       rpcUrl={config.rpcUrl}
       // rpcUrl={'https://mainnet-rpc.thundercore.com'}
+      // rpcUrl={'https://rpc.platform.dev.tt-eng.com'}
     >
       <MinerContractProvider
         contractAddress={config.contractAddress}
-        // contractAddress={'0x81397badca91F6822454fe72bb9c8444CBb15F7e'}
+        // contractAddress={'0x13eEc053BAa2eE73E8F198BB457aC0e48817cC79'}
       >
         <Header />
         <LoginForm>

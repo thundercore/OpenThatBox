@@ -6,6 +6,7 @@ import Blockie from '../Blockie/Blockie'
 import Typography from '@material-ui/core/Typography'
 //@ts-ignore
 import AnimatedNumber from 'react-animated-number'
+import { formatEther } from 'ethers/utils'
 
 const useStyles = makeStyles<Theme, IScoreDisplayProps>((theme: Theme) =>
   createStyles({
@@ -42,10 +43,10 @@ export default React.memo(function ScoreDisplay(props: IScoreDisplayProps) {
   return (
     <div>
       {Object.values(props.service.characters)
-        .sort((c1, c2) => c2.total - c1.total)
+        .sort((c1, c2) => (c2.total.gt(c1.total) ? 1 : -1))
         .slice(0, 10)
         .concat([props.service.currentUser])
-        .sort((c1, c2) => c2.total - c1.total)
+        .sort((c1, c2) => (c2.total.gt(c1.total) ? 1 : -1))
         .map(({ address, total }, idx) => (
           <Box
             key={address}
@@ -65,7 +66,7 @@ export default React.memo(function ScoreDisplay(props: IScoreDisplayProps) {
             </Box>
             <AnimatedNumber
               component={Typography}
-              value={total}
+              value={parseFloat(formatEther(total))}
               variant={'h6'}
               duration={500}
               stepPrecision={2}

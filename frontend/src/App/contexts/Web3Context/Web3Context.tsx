@@ -32,7 +32,7 @@ const Web3Context = React.createContext<IWeb3Context>({
 export default function Web3Provider({ children, rpcUrl }: IWeb3ContextProps) {
   const [provider] = useState(() => {
     const myProvider = new JsonRpcProvider(rpcUrl)
-    myProvider.pollingInterval = 300
+    myProvider.pollingInterval = 400
     return myProvider
   })
   const [signer, setSigner] = useState<Wallet | undefined>()

@@ -2,7 +2,7 @@ import { Contract } from 'ethers'
 import { parseMinerLog } from '../utils/parseMinerLog'
 //@ts-ignore
 import * as blockies from 'blockies'
-import { BigNumber } from 'ethers/utils'
+import { BigNumber, bigNumberify } from 'ethers/utils'
 import { Subject } from 'rxjs'
 
 export enum Tile {
@@ -17,7 +17,7 @@ export interface ICharacter {
   y: number
   address: string
   initialized: boolean
-  total: number
+  total: BigNumber
 }
 
 export enum Direction {
@@ -34,7 +34,7 @@ export class GameService {
 
   currentUser: ICharacter = {
     image: '',
-    total: 0,
+    total: bigNumberify(0),
     x: 0,
     y: 0,
     address: 'fake',
@@ -65,7 +65,6 @@ export class GameService {
     return {
       x: position.x.toNumber(),
       y: position.y.toNumber(),
-      total: position.total.toNumber(),
       initialized: position.initialized,
     }
   }
@@ -80,6 +79,7 @@ export class GameService {
     this.map = this.makeMap(this.size)
 
     this.currentUser = {
+      total: bigNumberify(0),
       address: this.address,
       image: this.createImage(this.address, true),
       ...user,
@@ -111,8 +111,8 @@ export class GameService {
       address: string,
       x: BigNumber,
       y: BigNumber,
-      val?: BigNumber,
-      total?: BigNumber
+      val: BigNumber,
+      total: BigNumber
     ) => {
       address = address.toLowerCase()
       const character = parseMinerLog(address, x, y, val, total)
@@ -165,6 +165,8 @@ export class GameService {
           ...character,
           image: this.createImage(userAddress),
         }
+      } else {
+        this.currentUser.total = character.total
       }
       this.map[character.x][character.y] = Tile.Mined
     })

@@ -4,13 +4,12 @@ contract Miner {
     event GameStarted(uint256 endBlock);
     event GameEnded();
     event PlayerMoved(address playerAddress, uint256 positionX, uint256 positionY, uint256 value, uint256 total);
-    event PlayerJoined(address playerAddress, uint256 positionX, uint256 positionY);
+    event PlayerJoined(address playerAddress, uint256 positionX, uint256 positionY, uint256 value, uint256 total);
 
     mapping (address => Position) public playerPositions;
     mapping (uint => bool) tileRevealed;
 
     struct Position {
-        uint256 total;
         uint256 x;
         uint256 y;
         bool initialized;
@@ -41,6 +40,8 @@ contract Miner {
         size = _size;
     }
 
+    function() external payable {}
+
     function startGame(uint256 _blocksUntilEnd) external payable {
         require(state == GameState.Constructed);
         require(msg.sender == owner);
@@ -64,7 +65,7 @@ contract Miner {
         playerPosition.y = uint256(keccak256(abi.encodePacked(blockhash(block.number -2), msg.sender))) % size;
         tileRevealed[playerPosition.x + (playerPosition.y * size)] = true;
 
-        emit PlayerJoined(msg.sender, playerPosition.x,playerPosition.y);
+        emit PlayerJoined(msg.sender, playerPosition.x,playerPosition.y, 0, address(msg.sender).balance);
     }
 
     function move(Direction _direction) external {
@@ -83,9 +84,9 @@ contract Miner {
     }
 
     function getRewards(Position storage playerPosition) internal {
-        uint256 value = tileRevealed[playerPosition.x + (playerPosition.y * size)] ? 0 : 2;
+        uint256 value = tileRevealed[playerPosition.x + (playerPosition.y * size)] ? 0 : 2 ether;
         tileRevealed[playerPosition.x + (playerPosition.y * size)] = true;
-        playerPosition.total += value;
-        emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,value,playerPosition.total);
+        address(msg.sender).transfer(value);
+        emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,value, address(msg.sender).balance);
     }
 }

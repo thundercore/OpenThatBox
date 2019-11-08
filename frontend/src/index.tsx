@@ -12,11 +12,8 @@ ReactDOM.render(
         background: {
           default: '#edeceb',
         },
-        secondary: {
-          main: '#ffe81c',
-        },
         primary: {
-          main: 'rgba(123, 239, 178, 1)',
+          main: '#ffe81c',
         },
       },
     })}
