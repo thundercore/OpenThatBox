@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "OpenThatBox/frontend/build/static/js/main.2fbdc520.chunk.js",
-    "main.js.map": "OpenThatBox/frontend/build/static/js/main.2fbdc520.chunk.js.map",
-    "runtime-main.js": "OpenThatBox/frontend/build/static/js/runtime-main.87206d92.js",
-    "runtime-main.js.map": "OpenThatBox/frontend/build/static/js/runtime-main.87206d92.js.map",
-    "static/js/2.836f0493.chunk.js": "OpenThatBox/frontend/build/static/js/2.836f0493.chunk.js",
-    "static/js/2.836f0493.chunk.js.map": "OpenThatBox/frontend/build/static/js/2.836f0493.chunk.js.map",
-    "index.html": "OpenThatBox/frontend/build/index.html",
-    "precache-manifest.3386cc2d15f542a4fb911c1354333e41.js": "OpenThatBox/frontend/build/precache-manifest.3386cc2d15f542a4fb911c1354333e41.js",
-    "service-worker.js": "OpenThatBox/frontend/build/service-worker.js",
-    "static/media/box-closed.png": "OpenThatBox/frontend/build/static/media/box-closed.3f0598f3.png"
+    "main.js": "frontend/build/static/js/main.d48d9a2c.chunk.js",
+    "main.js.map": "frontend/build/static/js/main.d48d9a2c.chunk.js.map",
+    "runtime-main.js": "frontend/build/static/js/runtime-main.fd98316d.js",
+    "runtime-main.js.map": "frontend/build/static/js/runtime-main.fd98316d.js.map",
+    "static/js/2.836f0493.chunk.js": "frontend/build/static/js/2.836f0493.chunk.js",
+    "static/js/2.836f0493.chunk.js.map": "frontend/build/static/js/2.836f0493.chunk.js.map",
+    "index.html": "frontend/build/index.html",
+    "precache-manifest.e4cd4474da2544971ed804b8b031ec44.js": "frontend/build/precache-manifest.e4cd4474da2544971ed804b8b031ec44.js",
+    "service-worker.js": "frontend/build/service-worker.js",
+    "static/media/box-closed.png": "frontend/build/static/media/box-closed.3f0598f3.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.87206d92.js",
+    "static/js/runtime-main.fd98316d.js",
     "static/js/2.836f0493.chunk.js",
-    "static/js/main.2fbdc520.chunk.js"
+    "static/js/main.d48d9a2c.chunk.js"
   ]
 }

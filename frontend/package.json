@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "PUBLIC_URL=OpenThatBox/frontend/build react-scripts build",
+    "build": "PUBLIC_URL=frontend/build react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
