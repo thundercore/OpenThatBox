@@ -83,9 +83,9 @@ contract Miner {
     }
 
     function getRewards(Position storage playerPosition) internal {
-        //        uint256 value = map[playerPosition.x][playerPosition.y];
-        //        playerPosition.total += value;
-        //        map[playerPosition.x][playerPosition.y] = 0;
-        emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,2,playerPosition.total);
+        uint256 value = tileRevealed[playerPosition.x + (playerPosition.y * size)] ? 0 : 2;
+        tileRevealed[playerPosition.x + (playerPosition.y * size)] = true;
+        playerPosition.total += value;
+        emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,value,playerPosition.total);
     }
 }

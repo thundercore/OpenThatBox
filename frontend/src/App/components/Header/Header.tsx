@@ -40,7 +40,12 @@ export default React.memo(function Header(props: IHeaderProps) {
                   ...
                 </Typography>
               </Box>
-              <Blockie address={address} height={24} width={24} />
+              <Blockie
+                address={address}
+                height={24}
+                width={24}
+                color={'white'}
+              />
             </Box>
           )}
       </Toolbar>

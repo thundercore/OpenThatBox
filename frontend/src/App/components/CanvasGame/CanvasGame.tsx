@@ -38,13 +38,12 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
       for (let y = bounds.boundsYLow; y <= bounds.boundsYHigh; y++) {
         const dx = (x - currentUser.x + viewPortX / 2) * TileSize
         const dy = (y - currentUser.y + viewPortY / 2) * TileSize
+        ctx.lineWidth = 2
+        ctx.strokeStyle = 'black'
+        ctx.strokeRect(dx, dy, TileSize, TileSize)
         if (service.map[x][y] === Tile.Mined) {
           ctx.fillStyle = 'green'
           ctx.fillRect(dx, dy, TileSize, TileSize)
-        } else {
-          ctx.lineWidth = 2
-          ctx.strokeStyle = 'black'
-          ctx.strokeRect(dx, dy, TileSize, TileSize)
         }
       }
     }
@@ -105,7 +104,7 @@ export default React.memo(function CanvasGame(props: ICanvasGameProps) {
     ctx.clearRect(0, 0, viewPortX * TileSize, viewPortY * TileSize)
     const { currentUser } = service
     // always in the middle
-    let boundsXLow = currentUser.x - 14 < 0 ? 0 : currentUser.x - 14
+    let boundsXLow = currentUser.x - 15 < 0 ? 0 : currentUser.x - 15
     let boundsXHigh =
       currentUser.x + 14 > service.size - 1
         ? service.size - 1

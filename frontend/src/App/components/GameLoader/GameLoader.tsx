@@ -10,6 +10,8 @@ import { useWeb3Context } from '../../contexts/Web3Context/Web3Context'
 import { useMinerContractContext } from '../../contexts/MinerContractContext/MinerContractContext'
 import CanvasGame from '../CanvasGame/CanvasGame'
 import { GameService } from '../../service/GameService'
+import Box from '@material-ui/core/Box'
+import ScoreDisplay from '../ScoreDisplay/ScoreDisplay'
 
 const useStyles = makeStyles<Theme, IGameLoaderProps>((theme: Theme) =>
   createStyles({})
@@ -41,8 +43,27 @@ export default React.memo(function GameLoader(props: IGameLoaderProps) {
     return <Typography>Please Refresh the Page and Try again</Typography>
   }
   return isLoading ? (
-    <CircularProgress />
+    <Box
+      display={'flex'}
+      alignItems={'center'}
+      mt={10}
+      justifyContent={'center'}
+    >
+      <CircularProgress />
+    </Box>
   ) : (
-    <CanvasGame service={service} stop={false} />
+    <Box
+      display={'flex'}
+      alignItems={'center'}
+      mt={10}
+      justifyContent={'center'}
+    >
+      <Box>
+        <ScoreDisplay service={service} />
+      </Box>
+      <Box>
+        <CanvasGame service={service} stop={false} />
+      </Box>
+    </Box>
   )
 })

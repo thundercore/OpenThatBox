@@ -8,15 +8,16 @@ interface IBlockieProps
       HTMLImageElement
     > {
   address: string
+  color: string
 }
 
 export default React.memo(function Blockie(props: IBlockieProps) {
-  const { address, ...rest } = props
+  const { address, color, ...rest } = props
   const data = useMemo(
     () =>
       blockies({
         seed: address,
-        color: '#fff',
+        color,
         bgcolor: '#00000000',
         size: 6,
         scale: 4,

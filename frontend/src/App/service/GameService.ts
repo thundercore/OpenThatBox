@@ -3,6 +3,7 @@ import { parseMinerLog } from '../utils/parseMinerLog'
 //@ts-ignore
 import * as blockies from 'blockies'
 import { BigNumber } from 'ethers/utils'
+import { Subject } from 'rxjs'
 
 export enum Tile {
   Unmined,
@@ -29,6 +30,8 @@ export enum Direction {
 export class GameService {
   isMoving = false
   size: number = 0
+  stateUpdate = new Subject()
+
   currentUser: ICharacter = {
     image: '',
     total: 0,
@@ -112,16 +115,17 @@ export class GameService {
       total?: BigNumber
     ) => {
       address = address.toLowerCase()
+      const character = parseMinerLog(address, x, y, val, total)
       if (address !== this.address) {
-        const character = {
-          ...parseMinerLog(address, x, y, val, total),
+        this.characters[address] = {
+          ...character,
           image: this.characters[address]
             ? this.characters[address].image
             : this.createImage(address),
         }
-        this.characters[address] = character
         this.map[character.x][character.y] = Tile.Mined
       }
+      this.stateUpdate.next()
     }
     this.contract.on('PlayerJoined', handleEvent)
     this.contract.on('PlayerMoved', handleEvent)
@@ -177,7 +181,8 @@ export class GameService {
 
   async callMove(direction: Direction) {
     this.isMoving = true
-    await this.contract.move(direction)
+    const trans = await this.contract.move(direction)
+    await trans.wait()
     this.isMoving = false
   }
 
