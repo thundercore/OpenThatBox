@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "frontend/build/static/js/main.089b4fdb.chunk.js",
-    "main.js.map": "frontend/build/static/js/main.089b4fdb.chunk.js.map",
+    "main.js": "frontend/build/static/js/main.0171c2ef.chunk.js",
+    "main.js.map": "frontend/build/static/js/main.0171c2ef.chunk.js.map",
     "runtime-main.js": "frontend/build/static/js/runtime-main.fd98316d.js",
     "runtime-main.js.map": "frontend/build/static/js/runtime-main.fd98316d.js.map",
     "static/js/2.0118b004.chunk.js": "frontend/build/static/js/2.0118b004.chunk.js",
     "static/js/2.0118b004.chunk.js.map": "frontend/build/static/js/2.0118b004.chunk.js.map",
     "index.html": "frontend/build/index.html",
-    "precache-manifest.82a2c0a870255d052f2cd55b68638d32.js": "frontend/build/precache-manifest.82a2c0a870255d052f2cd55b68638d32.js",
+    "precache-manifest.f3af53b1f6dbb6203192f799c27fa407.js": "frontend/build/precache-manifest.f3af53b1f6dbb6203192f799c27fa407.js",
     "service-worker.js": "frontend/build/service-worker.js",
     "static/media/box-closed.png": "frontend/build/static/media/box-closed.3f0598f3.png"
   },
   "entrypoints": [
     "static/js/runtime-main.fd98316d.js",
     "static/js/2.0118b004.chunk.js",
-    "static/js/main.089b4fdb.chunk.js"
+    "static/js/main.0171c2ef.chunk.js"
   ]
 }

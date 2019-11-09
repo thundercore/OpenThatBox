@@ -16,15 +16,8 @@ interface IAppProps {}
 export default React.memo(function App(props: IAppProps) {
   const classes = useStyles(props)
   return (
-    <Web3Provider
-      rpcUrl={config.rpcUrl}
-      // rpcUrl={'https://mainnet-rpc.thundercore.com'}
-      // rpcUrl={'https://rpc.platform.dev.tt-eng.com'}
-    >
-      <MinerContractProvider
-        // contractAddress={config.contractAddress}
-        contractAddress={'0x5f8DC84675613401EC8a26215d2E19e937dA0b2a'}
-      >
+    <Web3Provider rpcUrl={config.rpcUrl}>
+      <MinerContractProvider contractAddress={config.contractAddress}>
         <Header />
         <LoginForm>
           <GameLoader />
