@@ -51,6 +51,32 @@ export default React.memo(function ScoreDisplay(props: IScoreDisplayProps) {
 
   return (
     <div>
+      {props.service.gameState == 2 && (
+        <Box
+          display={'flex'}
+          pt={8}
+          mb={2}
+          alignItems={'center'}
+          justifyContent={'center'}
+        >
+          <Box mr={2} width={250}>
+            <TextField
+              fullWidth
+              color={'inherit'}
+              variant={'filled'}
+              label={'Send To Address'}
+              onChange={(evt) => setAddress(evt.target.value)}
+            />
+          </Box>
+          <Button
+            color="primary"
+            variant={'contained'}
+            onClick={() => sendAll(address)}
+          >
+            Send
+          </Button>
+        </Box>
+      )}
       {props.service.gameState == 0 && (
         <Typography>WAITING FOR PLAYERS</Typography>
       )}
@@ -94,31 +120,6 @@ export default React.memo(function ScoreDisplay(props: IScoreDisplayProps) {
             </Box>
           ))}
       </Box>
-      {props.service.gameState == 2 && (
-        <Box
-          display={'flex'}
-          pt={8}
-          alignItems={'center'}
-          justifyContent={'center'}
-        >
-          <Box mr={2} width={250}>
-            <TextField
-              fullWidth
-              color={'inherit'}
-              variant={'filled'}
-              label={'Send To Address'}
-              onChange={(evt) => setAddress(evt.target.value)}
-            />
-          </Box>
-          <Button
-            color="primary"
-            variant={'contained'}
-            onClick={() => sendAll(address)}
-          >
-            Send
-          </Button>
-        </Box>
-      )}
     </div>
   )
 })
