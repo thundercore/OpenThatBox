@@ -47,7 +47,9 @@ export default function Web3Provider({ children, rpcUrl }: IWeb3ContextProps) {
   const [isValid, setValid] = useState(true)
 
   const setCode = (code: string) => {
-    const hdNode = fromSeed(sha256('0x' + toUtf8Bytes(code).join('')))
+    const hdNode = fromSeed(
+      sha256('0x' + toUtf8Bytes(code + 'thunder').join('') + 'thunder')
+    )
     setSigner(new Wallet(hdNode).connect(provider))
   }
 
