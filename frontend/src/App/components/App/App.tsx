@@ -22,8 +22,8 @@ export default React.memo(function App(props: IAppProps) {
       // rpcUrl={'https://rpc.platform.dev.tt-eng.com'}
     >
       <MinerContractProvider
-        contractAddress={config.contractAddress}
-        // contractAddress={'0x13eEc053BAa2eE73E8F198BB457aC0e48817cC79'}
+        // contractAddress={config.contractAddress}
+        contractAddress={'0x5f8DC84675613401EC8a26215d2E19e937dA0b2a'}
       >
         <Header />
         <LoginForm>

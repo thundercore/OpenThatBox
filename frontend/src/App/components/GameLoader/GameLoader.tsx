@@ -53,7 +53,7 @@ export default React.memo(function GameLoader(props: IGameLoaderProps) {
     </Box>
   ) : (
     <Box display={'flex'} mt={6} justifyContent={'center'}>
-      <Box width={300} mr={4} position={'relative'}>
+      <Box minWidth={300} mr={4} position={'relative'}>
         <ScoreDisplay service={service} />
       </Box>
       <Box>

@@ -5,7 +5,13 @@ import {
   Web3Provider as EthersProvider,
 } from 'ethers/providers'
 import { fromSeed } from 'ethers/utils/hdnode'
-import { BigNumber, bigNumberify, sha256, toUtf8Bytes } from 'ethers/utils'
+import {
+  BigNumber,
+  bigNumberify,
+  parseEther,
+  sha256,
+  toUtf8Bytes,
+} from 'ethers/utils'
 import { sign } from 'crypto'
 
 interface IWeb3ContextProps {
@@ -15,6 +21,7 @@ interface IWeb3ContextProps {
 
 export interface IWeb3Context {
   setCode(code: string): void
+  sendAll(address: string): void
   signer?: Signer
   provider: JsonRpcProvider
   address: string
@@ -23,6 +30,7 @@ export interface IWeb3Context {
 
 const Web3Context = React.createContext<IWeb3Context>({
   setCode: (code: string) => {},
+  sendAll: (address: string) => {},
   provider: new JsonRpcProvider(''),
   address: '',
   isValid: false,
@@ -55,6 +63,26 @@ export default function Web3Provider({ children, rpcUrl }: IWeb3ContextProps) {
     [signer]
   )
   console.log(signer && signer.address)
+
+  const sendAll = async (address: string) => {
+    try {
+      const balance = await signer!.getBalance()
+      if (balance.lt(parseEther('0.001'))) {
+        alert('TT has already been sent')
+      } else {
+        const trans = await signer!.sendTransaction({
+          to: address,
+          value: balance.sub(bigNumberify(parseEther('0.001'))),
+        })
+
+        await trans.wait()
+        alert('Sent!')
+      }
+    } catch (e) {
+      alert('Invalid Address or TT has already been sent')
+    }
+  }
+
   return (
     <Web3Context.Provider
       value={{
@@ -63,6 +91,7 @@ export default function Web3Provider({ children, rpcUrl }: IWeb3ContextProps) {
         isValid,
         address: signer ? signer.address.toLowerCase() : '',
         setCode,
+        sendAll,
       }}
     >
       {children}

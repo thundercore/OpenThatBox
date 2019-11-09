@@ -94,7 +94,6 @@ export class GameService {
       }
     }
     this.map[this.currentUser.x][this.currentUser.y] = Tile.Mined
-
     this.gameState = state
     await this.loadHistoricalData()
     this.watchMovement()
@@ -131,6 +130,14 @@ export class GameService {
     }
     this.contract.on('PlayerJoined', handleEvent)
     this.contract.on('PlayerMoved', handleEvent)
+    this.contract.on('GameStarted', () => {
+      this.gameState = 1
+      this.stateUpdate.next()
+    })
+    this.contract.on('GameEnded', () => {
+      this.gameState = 2
+      this.stateUpdate.next()
+    })
   }
 
   private async loadHistoricalData() {
@@ -174,6 +181,7 @@ export class GameService {
 
   canMove(x: number, y: number) {
     return (
+      this.gameState === 1 &&
       x >= 0 &&
       y >= 0 &&
       x < this.size &&

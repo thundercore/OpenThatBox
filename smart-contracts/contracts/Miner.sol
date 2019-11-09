@@ -46,6 +46,7 @@ contract Miner {
         require(state == GameState.Constructed);
         require(msg.sender == owner);
         endBlock = block.number + _blocksUntilEnd;
+        state = GameState.Started;
         emit GameStarted(endBlock);
     }
 
@@ -69,7 +70,11 @@ contract Miner {
     }
 
     function move(Direction _direction) external {
-        //        require(state == GameState.Started);
+        require(state == GameState.Started);
+        if(block.number > endBlock) {
+            state = GameState.Ended;
+            emit GameEnded();
+        }
         Position storage playerPosition = playerPositions[msg.sender];
         if(_direction == Direction.Left) {
             playerPosition.x--;
@@ -84,9 +89,14 @@ contract Miner {
     }
 
     function getRewards(Position storage playerPosition) internal {
-        uint256 value = tileRevealed[playerPosition.x + (playerPosition.y * size)] ? 0 : 2 ether;
+        uint256 value = tileRevealed[playerPosition.x + (playerPosition.y * size)] ? 0 : 0.5 ether;
         tileRevealed[playerPosition.x + (playerPosition.y * size)] = true;
         address(msg.sender).transfer(value);
         emit PlayerMoved(msg.sender, playerPosition.x, playerPosition.y,value, address(msg.sender).balance);
+    }
+
+    function kill() external {
+        require(msg.sender == owner);
+        selfdestruct(msg.sender);
     }
 }
